@@ -4,33 +4,6 @@
 This project is a API for site with timetable for studens of Krakow University of Technology, Faculty of Mechanical Engineering.
 
 
-## Documentation
-
-### Getting timetable records for specific groups
-https://pktimetable.app/api/timetable/{group} 
-
-The variable group can take one of three possible values:
- - All - Return all available records
- - 1 - Return records for 11K1
- - 2 - Return records for 12K1    
-
-### Available variables
- |Variable|Possible inputs|Description|
- |--------|--------------:|:----------|
- |`day`     |1 to 7         |Returns records from specific day|
- |`lab`     |1 to 5         |Returns records for specific lab group|
- |`klab`|1 to 5|Returns records for specific computer lab group|
- |`week`|N / P / autoExact / auto|Consecutively returns records with week: odd / even / calculated / calculated but if its called on sunday it will display next week|
- |`merge`|True / False| If true it will return merged lessons|
- |`fill`|True / False| If true it will fill return with breaks|
-
- Variables dont work if group is set to "All"
- 
- Merge and Fill work only if lab, klab and week is set to any of provided inputs.
- 
-
-
-
 ## API Reference
 
 #### Get all items
