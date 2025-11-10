@@ -12,6 +12,8 @@ This project is a API for site with timetable for studens of Krakow University o
   GET /api/timetable/all
 ```
 
+Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
+
 #### Get filtered item
 
 ```http

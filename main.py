@@ -49,10 +49,11 @@ def get_timetable(group: str,
             el = timetableRow(row, day, lab, klab, week)
             if el is not None: result2.append(el)
 
+        result1 = sorted(result1, key=lambda x:x['day'])
+        result2 = sorted(result2, key=lambda x:x['day'])
+
         result.append({"11k1": result1})
         result.append({"11k2": result2})
-        
-        result = sorted(result, key=lambda x:x['day'])
 
         return result
     elif group == "1":
