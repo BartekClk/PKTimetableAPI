@@ -32,7 +32,7 @@ Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
 | `week`| `string` |N / P / AutoExact / Auto |**Requred for ! variables to work** Consecutively: Odd, Even, Calculated week, calculated week but if called on sunday, will return records for next week|
 |! `merge`| `bool` |True / False | If true it will return merged lessons|
 |! `fill`| `bool` |True / False | If true it will fill return records filled with breaks between lessons|
-|! `changes`| `bool` |True / False | If true it will apply changes from database|
+|`changes`| `bool` |True / False | If true it will apply changes from database|
 
 #### Get week type
 
