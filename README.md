@@ -26,12 +26,13 @@ Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
 
 | Variable | Type     | Value |Description                       |
 | :-------- | :------- | :--: |:-------------------------------- |
-| `day`| `string` |1 - 7 / auto|Day of the week / Current weekday|
+| `day`| `string` |1 - 7 / auto|Day of the week / Returns records for current weekday|
 | `lab`| `int` |1 - 5 |**Requred for ! variables to work** Lab group|
 | `klab`| `int` |1 - 5 |**Requred for ! variables to work** Computer lab group |
 | `week`| `string` |N / P / AutoExact / Auto |**Requred for ! variables to work** Consecutively: Odd, Even, Calculated week, calculated week but if called on sunday, will return records for next week|
 |! `merge`| `bool` |True / False | If true it will return merged lessons|
-|! `fill`| `bool` |True / False | If true it will fill return with breaks|
+|! `fill`| `bool` |True / False | If true it will fill return records filled with breaks between lessons|
+|! `changes`| `bool` |True / False | If true it will apply changes from database|
 
 #### Get week type
 

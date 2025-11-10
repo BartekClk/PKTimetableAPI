@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Time
+from sqlalchemy import Column, Date, Integer, String, ForeignKey, Time
 from sqlalchemy.orm import relationship, declarative_base
 from database import Base
 
@@ -48,3 +48,12 @@ class Timetable11k2(Base):
 
     syllabus = relationship("Syllabus", backref="timetable_11k2")
     hours = relationship("Hours", backref="timetable_11k2")
+
+class Changes(Base):
+    __tablename__ = "changes_11k1"
+    id = Column(Integer, primary_key=True, index=True)
+    action = Column(Integer)
+    syllabusID = Column(Integer)
+    start = Column(Date)
+    end = Column(Date)
+    operation = Column(String)
