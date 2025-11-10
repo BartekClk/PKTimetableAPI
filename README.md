@@ -9,7 +9,7 @@ This project is a API for site with timetable for studens of Krakow University o
 #### Get all items
 
 ```http
-  GET /api/timetable/all
+  GET planzajecpk.app/api2/timetable/all
 ```
 
 Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
@@ -17,7 +17,7 @@ Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
 #### Get filtered item
 
 ```http
-  GET /api/timetable/{group}?{variable1}={value}&{variable2}={value}&...&{variableN}={value}
+  GET planzajecpk.app/api2/timetable/{group}?{variable1}={value}&{variable2}={value}&...&{variableN}={value}
 ```
 
 | Parameter | Type     | Value |Description                       |
@@ -34,10 +34,15 @@ Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
 |! `fill`| `bool` |True / False | If true it will fill return records filled with breaks between lessons|
 |`changes`| `bool` |True / False | If true it will apply changes from database|
 
+Example querry with all variables:
+```http
+  GET https://planzajecpk.app/api2/timetable/1?day=auto&lab=1&klab=1&week=auto&merge=true&fill=true&changes=true
+```
+
 #### Get week type
 
 ```http
-  GET /api/weektype?{variable}={value}
+  GET /api2/weektype?{variable}={value}
 ```
 
 | Variable | Type     | Input |Description                       |
