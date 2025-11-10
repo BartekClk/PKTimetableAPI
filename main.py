@@ -1,3 +1,4 @@
+from datetime import date
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 import models
@@ -17,7 +18,7 @@ def get_db():
 
 @app.get("/timetable/{group}")
 def get_timetable(group: str, 
-                  day: int = None,
+                  day: str = None,
                   lab: int = None,
                   klab: int = None,
                   week: str = None,
@@ -32,6 +33,16 @@ def get_timetable(group: str,
         elif week.lower() == "autoexact":
             week = week_.get() 
             print(week)
+
+    if day is not None:
+        if day.lower() == "auto":
+            day = date.today().isoweekday()
+        else:
+            try:
+                int(day)
+                day = int(day)
+            except:
+                day = None
 
     if group == "all":
         data1 = db.query(models.Timetable11k1).options(joinedload(models.Timetable11k1.syllabus)).all()
@@ -142,38 +153,37 @@ def timetableRow(row, day = None, lab = None, klab = None, week=None):
 def mergeLessons(table, hours):
     if not table:
         return []
-    
+
     merged = []
     i = 0
-    
+
     while i < len(table):
         current = table[i]
         lesson_length = 1
-        
-        if (i + 1 < len(table) and 
-            current["syllabusID"] == table[i + 1]["syllabusID"] and
-            current["week"] == table[i + 1]["week"] and
-            current["lessonTypeFull"] == table[i + 1]["lessonTypeFull"] and
-            current["lecturer"] == table[i + 1]["lecturer"] and
-            current["hall"] == table[i + 1]["hall"] and
-            current["hour"] + 1 == table[i + 1]["hour"]):
-            
-            lesson_length = 2
-            i += 1
-        else:
-            pass
-        
+
+        while (
+            i + lesson_length < len(table)
+            and current["syllabusID"] == table[i + lesson_length]["syllabusID"]
+            and current["week"] == table[i + lesson_length]["week"]
+            and current["lessonTypeFull"] == table[i + lesson_length]["lessonTypeFull"]
+            and current["lecturer"] == table[i + lesson_length]["lecturer"]
+            and current["hall"] == table[i + lesson_length]["hall"]
+            and current["hour"] + lesson_length == table[i + lesson_length]["hour"]
+        ):
+            lesson_length += 1
+
         merged_lesson = current.copy()
         merged_lesson["length"] = lesson_length
-        if merged_lesson["id"]!=-1:
-            merged_lesson["end"] = str(hours[int(merged_lesson["hour"]+(lesson_length-1))]["end"])[:-3]
+
+        if merged_lesson["id"] != -1:
+            merged_lesson["end"] = str(hours[int(merged_lesson["hour"] + (lesson_length - 1))]["end"])[:-3]
         else:
-            merged_lesson["end"] = str(table[i]["end"])
-            merged_lesson["exactEnd"] = str(table[i]["exactEnd"])
+            merged_lesson["end"] = str(table[i + lesson_length - 1]["end"])
+            merged_lesson["exactEnd"] = str(table[i + lesson_length - 1]["exactEnd"])
+
         merged.append(merged_lesson)
-        
-        i += 1
-    
+        i += lesson_length 
+
     return merged
 
 def fillBreaks(table, hours):
