@@ -42,7 +42,7 @@ Example querry with all variables:
 #### Get week type
 
 ```http
-  GET /api2/weektype?{variable}={value}
+  GET planzajecpk.app/api2/weektype?{variable}={value}
 ```
 
 | Variable | Type     | Input |Description                       |
