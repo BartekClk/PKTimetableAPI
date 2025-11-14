@@ -10,18 +10,18 @@ from weekType import Week
 app = FastAPI()
 # --- CORS ---
 # origins = [
-#     "http://localhost:5173",  # adres Twojego Reacta
+#     "http://localhost:5173",
+#     "*"
 #     # lub "*" żeby pozwolić wszystkim
 # ]
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-# --- koniec CORS ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 models.Base.metadata.create_all(bind=engine)
 
