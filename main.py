@@ -3,11 +3,27 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 import models
 from database import SessionLocal, engine
+from fastapi.middleware.cors import CORSMiddleware
 
 from weekType import Week
 
-models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+# --- CORS ---
+origins = [
+    "http://localhost:5173",  # adres Twojego Reacta
+    # lub "*" żeby pozwolić wszystkim
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# --- koniec CORS ---
+
+models.Base.metadata.create_all(bind=engine)
 
 def get_db():
     db = SessionLocal()
@@ -33,7 +49,6 @@ def get_timetable(group: str,
             week = week_.get(earlyChange=True)
         elif week.lower() == "autoexact":
             week = week_.get() 
-            print(week)
 
     if day is not None:
         if day.lower() == "auto":
@@ -58,11 +73,11 @@ def get_timetable(group: str,
         result2 = []
 
         for row in data1:
-            el = timetableRow(row, day, lab, klab, week, changes, changesData)
+            el = timetableRow(row, day, lab, klab, week, changes, [])
             if el is not None: result1.append(el)
 
         for row in data2:
-            el = timetableRow(row, day, lab, klab, week, changes, changesData)
+            el = timetableRow(row, day, lab, klab, week, changes, [])
             if el is not None: result2.append(el)
 
         result1 = sorted(result1, key=lambda x:x['day'])
@@ -114,7 +129,7 @@ def get_timetable(group: str,
 
         result = []
         for row in data:
-            el = timetableRow(row, day, lab, klab, week, changes, changesData)
+            el = timetableRow(row, day, lab, klab, week, changes, [])
             if el is not None: result.append(el)
 
         if fill and lab is not None and klab is not None and week is not None:
@@ -139,8 +154,8 @@ def timetableRow(row, day, lab, klab, week, changes, changesData):
         "end": str(row.hours.end)[:-3],
         "syllabusID": row.syllabusID,
         "syllabus": row.syllabus.name if row.syllabus else None,
-        "lessonGroup": row.lessonType[-1:] if (len(row.lessonType) > 1 and len(row.lessonType)<4) else (row.lessonType[-2:] if (len(row.lessonType) > 3 and len(row.lessonType)<5) else ""),
-        "lessonType": row.lessonType[:1] if len(row.lessonType) > 1 else "",
+        "lessonGroup": "",
+        "lessonType": "",
         "lessonTypeFull": row.lessonType,
         "week": row.week,
         "lecturer": row.lecturer,
@@ -156,9 +171,36 @@ def timetableRow(row, day, lab, klab, week, changes, changesData):
             start = row.start
             end = row.end
             if (start - today).days <= 0 and (end - today).days >= 0:
-                if row.action == 1 and data["syllabusID"] == row.syllabusID: data = None
+                if data is not None and row.action == 1 and data["syllabusID"] == row.syllabusID: data = None
+                if data is not None and row.action == 2 and data["syllabusID"]==row.syllabusID:
+                    op = row.operation
+                    if op.find("^") != -1:
+                        day_ = int(op[op.find("^")+1])
+                        hours = op[op.find("@")+1:]
+                        hours = hours[0:hours.find("@")].split(",")
+                        i=0
+                        for el in hours:
+                            hours[i]=int(hours[i])
+                            i+=1
 
+                        content = op[op.find("|")+1:]
+                        content = content[0:content.find("|")]
+                        param = content.split(">")[0]
+                        content = content.split(">")[1]
+
+                        if day_ == data["day"]:
+                            try:
+                                hours.index(data["hour"])
+                                data[param] = content
+                            except:
+                                continue
+    
     if data is not None and day is not None and data["day"] != day: data = None
+
+    if data is not None: 
+        data["lessonGroup"] = data["lessonTypeFull"][-1:] if (len(data["lessonTypeFull"]) > 1 and len(data["lessonTypeFull"])<4) else (data["lessonTypeFull"][-2:] if (len(data["lessonTypeFull"]) > 3 and len(data["lessonTypeFull"])<5) else "")
+        data["lessonType"] = data["lessonTypeFull"][:1] if len(data["lessonTypeFull"]) > 1 else ""
+        
     if data is not None and week is not None and week is not None and data["week"].lower() != week.lower(): data = None
     if data is not None and lab is not None and data["lessonType"] == "L" and data["lessonGroup"] != str(lab): data = None
     if data is not None and klab is not None and data["lessonType"] == "K" and data["lessonGroup"] != str(klab): data = None
@@ -183,6 +225,7 @@ def mergeLessons(table, hours):
             and current["lecturer"] == table[i + lesson_length]["lecturer"]
             and current["hall"] == table[i + lesson_length]["hall"]
             and current["hour"] + lesson_length == table[i + lesson_length]["hour"]
+            and current["lessonTypeFull"] == table[i + lesson_length]["lessonTypeFull"]
         ):
             lesson_length += 1
 
