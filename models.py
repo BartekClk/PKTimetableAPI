@@ -28,6 +28,7 @@ class Timetable11k1(Base):
     hall = Column(String(100))
     hallLink = Column(String(200))
     altName = Column(String(100))
+    color = Column(String)
 
     syllabus = relationship("Syllabus", backref="timetable_11k1")
     hours = relationship("Hours", backref="timetable_11k1")
@@ -45,6 +46,7 @@ class Timetable11k2(Base):
     hall = Column(String(100))
     hallLink = Column(String(200))
     altName = Column(String(100))
+    color = Column(String)
 
     syllabus = relationship("Syllabus", backref="timetable_11k2")
     hours = relationship("Hours", backref="timetable_11k2")
@@ -57,3 +59,10 @@ class Changes(Base):
     start = Column(Date)
     end = Column(Date)
     operation = Column(String)
+
+class Colors(Base):
+    __tablename__ = "colors"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    color = Column(String)
+    gradient = Column(String)

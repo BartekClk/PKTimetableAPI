@@ -49,6 +49,11 @@ Example querry with all variables:
 | :-------- | :------- | :--: |:-------------------------------- |
 | `week`| `string` | Exact / Auto |Consecutively: Calculated week, calculated week but if called on sunday, will return records for next week|
 
+#### Get colors defined for site
+
+```http
+  GET planzajecpk.app/api2/colors
+```
 
 ## Authors
 
