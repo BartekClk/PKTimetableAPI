@@ -22,7 +22,7 @@ Returns all records in format `[{ "11K1":[{...}], "11K2":[{...}] }]`
 
 | Parameter | Type     | Value |Description                       |
 | :-------- | :------- | :--: |:-------------------------------- |
-| `group`| `string` |1 / 2 |**Required**. Consecutively: 11K1, 11K2  |
+| `group`| `string` |11k1 / 11k2 |**Required**. Consecutively: 11K1, 11K2  |
 
 | Variable | Type     | Value |Description                       |
 | :-------- | :------- | :--: |:-------------------------------- |

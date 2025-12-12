@@ -64,30 +64,7 @@ def get_timetable(group: str,
     if changes == True:
         changesData = db.query(models.Changes).all()
 
-    if group == "all":
-        data1 = db.query(models.Timetable11k1).options(joinedload(models.Timetable11k1.syllabus)).all()
-        data2 = db.query(models.Timetable11k2).options(joinedload(models.Timetable11k2.syllabus)).all()
-
-        result = [] 
-        result1 = []
-        result2 = []
-
-        for row in data1:
-            el = timetableRow(row, day, lab, klab, week, changes, [])
-            if el is not None: result1.append(el)
-
-        for row in data2:
-            el = timetableRow(row, day, lab, klab, week, changes, [])
-            if el is not None: result2.append(el)
-
-        result1 = sorted(result1, key=lambda x:x['day'])
-        result2 = sorted(result2, key=lambda x:x['day'])
-
-        result.append({"11k1": result1})
-        result.append({"11k2": result2})
-
-        return result
-    elif group == "1":
+    if group == "1" or group == "11k1":
         data = db.query(models.Timetable11k1).options(
             joinedload(models.Timetable11k1.syllabus),
             joinedload(models.Timetable11k1.hours)
@@ -114,7 +91,7 @@ def get_timetable(group: str,
             result = mergeLessons(result, hours)
 
         return result
-    elif group == "2":
+    elif group == "2" or group == "11k2":
         data = db.query(models.Timetable11k2).options(
             joinedload(models.Timetable11k2.syllabus),
             joinedload(models.Timetable11k2.hours)
