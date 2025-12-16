@@ -55,6 +55,12 @@ Example querry with all variables:
   GET planzajecpk.app/api2/colors
 ```
 
+#### Get available fields of study
+
+```http
+  GET planzajecpk.app/api2/available_fields
+```
+
 ## Authors
 
 - [@BartekClk](https://www.github.com/bartekclk)

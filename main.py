@@ -119,7 +119,7 @@ def get_timetable(group: str,
 
         return result
     else:
-        raise HTTPException(status_code=400, detail="Invalid group parameter: all, 1, 2 are allowed")
+        raise HTTPException(status_code=400, detail="Invalid group parameter: 1/11k1, 2/11k2,  are allowed")
     
 def timetableRow(row, day, lab, klab, week, changes, changesData):
     data = {
@@ -310,3 +310,16 @@ def getColors(db: Session = Depends(get_db)):
         }
 
     return [result]
+
+@app.get("/available_fields")
+def getFields(db: Session = Depends(get_db)):
+    fields = db.query(models.AvailableFields).all()
+
+    result = []
+    for row in fields:
+        result.append({
+            "prefix":row.prefix,
+            "value":row.value,
+        })
+
+    return result

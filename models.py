@@ -66,3 +66,9 @@ class Colors(Base):
     name = Column(String)
     color = Column(String)
     gradient = Column(String)
+
+class AvailableFields(Base):
+    __tablename__ = "available_fields"
+    id = Column(Integer, primary_key=True, index=True)
+    prefix = Column(String)
+    name = Column(String)
