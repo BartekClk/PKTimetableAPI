@@ -71,4 +71,4 @@ class AvailableFields(Base):
     __tablename__ = "available_fields"
     id = Column(Integer, primary_key=True, index=True)
     prefix = Column(String)
-    name = Column(String)
+    value = Column(String)
