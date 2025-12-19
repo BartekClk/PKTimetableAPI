@@ -1,6 +1,6 @@
 from datetime import date
 
-def timetableRow(row, day, lab, klab, week, changes, changesData):
+def timetableRow(row, day, lab, klab, jang, week, changes, changesData):
     data = {
         "id": row.id,
         "day": row.day,
@@ -31,8 +31,6 @@ def timetableRow(row, day, lab, klab, week, changes, changesData):
         data["lessonType"] = data["lessonTypeFull"][:1] if len(data["lessonTypeFull"]) > 1 else data["lessonType"]
         
     if data is not None and week is not None and week is not None and data["week"].lower() != week.lower(): data = None
-    if data is not None and lab is not None and data["lessonType"] == "L" and data["lessonGroup"] != str(lab): data = None
-    if data is not None and klab is not None and data["lessonType"] == "K" and data["lessonGroup"] != str(klab): data = None
 
     if changes is not None and data is not None:
         for row in changesData:
@@ -40,7 +38,13 @@ def timetableRow(row, day, lab, klab, week, changes, changesData):
             start = row.start
             end = row.end
             if ((start - today).days <= 0 and (end - today).days >= 0) and row.syllabusID == data["syllabusID"]:
-                if row.changesID == 1: data = None
+                if row.changesID == 1: 
+                    conditionKeys = row.operation[0].keys()
+                    hide = True
+                    for key in conditionKeys:
+                        hide = hide and (data[key] in row.operation[0][key] or -1 in row.operation[0][key])
+                    if hide:
+                        data = None
                 elif row.changesID == 2:
                     conditionKeys = row.operation[0].keys()
                     change = True
@@ -50,5 +54,10 @@ def timetableRow(row, day, lab, klab, week, changes, changesData):
                         keys = row.operation[1].keys()
                         for key in keys:
                             data[key] = row.operation[1][key]
+
+    if data is not None and lab is not None and data["lessonType"] == "L" and data["lessonGroup"] != str(lab): data = None
+    if data is not None and klab is not None and data["lessonType"] == "K" and data["lessonGroup"] != str(klab): data = None
+    if data is not None and jang is not None and data["syllabusID"] == 3 and data["lessonType"].find(str(jang)) == -1:
+        data = None
 
     return data
