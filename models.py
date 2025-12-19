@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, Integer, String, ForeignKey, Time
+from sqlalchemy import Column, Date, Integer, String, ForeignKey, Time, JSON
 from sqlalchemy.orm import relationship, declarative_base
 from database import Base
 
@@ -51,14 +51,23 @@ class Timetable11k2(Base):
     syllabus = relationship("Syllabus", backref="timetable_11k2")
     hours = relationship("Hours", backref="timetable_11k2")
 
-class Changes(Base):
+class Changes_11k1(Base):
     __tablename__ = "changes_11k1"
     id = Column(Integer, primary_key=True, index=True)
-    action = Column(Integer)
+    changesID = Column(Integer)
     syllabusID = Column(Integer)
     start = Column(Date)
     end = Column(Date)
-    operation = Column(String)
+    operation = Column(JSON)
+
+class Changes_11k2(Base):
+    __tablename__ = "changes_11k2"
+    id = Column(Integer, primary_key=True, index=True)
+    changesID = Column(Integer)
+    syllabusID = Column(Integer)
+    start = Column(Date)
+    end = Column(Date)
+    operation = Column(JSON)
 
 class Colors(Base):
     __tablename__ = "colors"
@@ -70,5 +79,5 @@ class Colors(Base):
 class AvailableFields(Base):
     __tablename__ = "available_fields"
     id = Column(Integer, primary_key=True, index=True)
-    prefix = Column(String)
+    name = Column(String)
     value = Column(String)
