@@ -57,6 +57,6 @@ def timetableRow(row, day, lab, klab, jang, week, changes, changesData):
 
     if data is not None and lab is not None and data["lessonType"] == "L" and data["lessonGroup"] != str(lab): data = None
     if data is not None and klab is not None and data["lessonType"] == "K" and data["lessonGroup"] != str(klab): data = None
-    if data is not None and jang is not None and data["syllabusID"] == 3 and data["lessonType"].find(str(jang).upper()) == -1: data = None
+    if data is not None and jang is not None and jang is not "All" and data["syllabusID"] == 3 and data["lessonType"].find(str(jang).upper()) == -1: data = None
 
     return data
