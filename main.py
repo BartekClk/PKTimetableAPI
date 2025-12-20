@@ -116,7 +116,7 @@ def get_timetable(group: str,
 
         result = []
         for row in data:
-            el = timetableRow(row, day, lab, klab, week, changes, [])
+            el = timetableRow(row, day, lab, klab, jang, week, changes, changesData)
             if el is not None: result.append(el)
 
         if fill and lab is not None and klab is not None and week is not None:
